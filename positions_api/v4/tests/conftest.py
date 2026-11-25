@@ -1,6 +1,7 @@
 import pytest
 import httpx
 from http import HTTPStatus
+from uuid import uuid4
 from random import  random,choice
 from faker import Faker
 fake=Faker("ru-RU")
@@ -102,7 +103,7 @@ def real_employee_id(api_client,auth_header):
 @pytest.fixture
 def department_payload(real_employee_id):
     data ={
-    "departmentName":  fake.unique.word(),
+    "departmentName": f"Отдел {uuid4().hex}",
     "headId": real_employee_id
     }
     return data

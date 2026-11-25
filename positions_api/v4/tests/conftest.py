@@ -38,8 +38,8 @@ def find_department_name(api_client):
     return choice(body)["departmentName"]
 
 @pytest.fixture() 
-def generate_department_name(api_client):
-    return fake.unique.word()
+def generate_department_name():
+    return f"Несуществующий отдел {uuid4().hex}"
     
 @pytest.fixture(scope="session") 
 def auth_token(api_client):

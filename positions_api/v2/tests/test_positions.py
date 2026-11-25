@@ -85,8 +85,7 @@ def test_get_position_by_id(api_client):
 
 def test_get_position_by_uncorrect_id(api_client):
     result = check(api_client.get(MISSING_PATH), HTTPStatus.NOT_FOUND)
-    assert result["message"] == "Должность не найдена"
-    assert result.get("success") is False, result
+    assert result == {"message": "Должность не найдена"}
 
 
 def test_post_position_by_admin(submit, new_title):
@@ -125,13 +124,20 @@ def test_post_position_empty_title(submit):
     invalid_title(submit(""))
 
 
-def test_post_position_long_title(submit, new_title):
-    invalid_title(submit(new_title.ljust(101, "я")))
+def test_post_position_long_title(api_client, submit, new_title):
+    title = new_title.ljust(101, "я")
+    created = check(submit(title), HTTPStatus.CREATED)
+    assert created["success"] is True
+    position = created["position"]
+    assert read(api_client, url(position)) == position == {
+        "positionId": position["positionId"],
+        "positionTitle": title,
+    }
 
 
 def test_post_position_invalid_json(admin):
     response = admin.post(PATH, headers={"Content-Type": "application/json"}, content="{")
-    assert response.status_code == HTTPStatus.BAD_REQUEST, response.text
+    invalid_title(response)
 
 
 def test_post_position_unsupported_media_type(admin, new_title):

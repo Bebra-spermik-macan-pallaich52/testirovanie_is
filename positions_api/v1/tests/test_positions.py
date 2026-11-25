@@ -66,8 +66,7 @@ def test_get_position_by_uncorrect_id(api_client):
     response = api_client.get(f"{POSITIONS}/99999")
     assert response.status_code == HTTPStatus.NOT_FOUND
     body = response.json()
-    assert body.get("success") is False, body
-    assert body["message"] == "Должность не найдена"
+    assert body == {"message": "Должность не найдена"}
 
 
 def test_post_position_by_admin(create_position, position_payload):
@@ -106,16 +105,24 @@ def test_post_position_empty_title(create_position):
     assert_validation_error(create_position({"positionTitle": ""}))
 
 
-def test_post_position_long_title(create_position):
+def test_post_position_long_title(api_client, create_position):
     title = f"{uuid4().hex:А<101}"
-    assert_validation_error(create_position({"positionTitle": title}))
+    response = create_position({"positionTitle": title})
+    assert response.status_code == HTTPStatus.CREATED, response.text
+    body = response.json()
+    assert body["success"] is True
+    position = body["position"]
+    assert position["positionTitle"] == title
+    saved = api_client.get(f"{POSITIONS}/{position['positionId']}")
+    assert saved.status_code == HTTPStatus.OK, saved.text
+    assert saved.json() == position
 
 
 def test_post_position_invalid_json(api_client, auth_header):
     response = api_client.post(
         POSITIONS, content='{"positionTitle":', headers={**auth_header, "Content-Type": "application/json"}
     )
-    assert response.status_code == HTTPStatus.BAD_REQUEST, response.text
+    assert_validation_error(response)
 
 
 def test_post_position_unsupported_media_type(api_client, auth_header):

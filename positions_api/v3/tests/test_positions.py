@@ -75,7 +75,7 @@ def test_get_position_by_id(api_client):
 
 def test_get_position_by_uncorrect_id(api_client):
     response = expect_status(api_client.get(endpoint(UNKNOWN_ID)), 404)
-    assert response.json() == {"success": False, "message": "Должность не найдена"}
+    assert response.json() == {"message": "Должность не найдена"}
 
 
 def test_post_position_by_admin(admin_request, title):
@@ -117,13 +117,20 @@ def test_post_position_empty_title(admin_request, body):
     assert_validation(admin_request("POST", json=body))
 
 
-def test_post_position_long_title(admin_request, title):
-    assert_validation(admin_request("POST", json={"positionTitle": title.ljust(101, "я")}))
+def test_post_position_long_title(api_client, admin_request, title):
+    long_title = title.ljust(101, "я")
+    response = admin_request("POST", json={"positionTitle": long_title})
+    body = expect_status(response, 201).json()
+    assert body["success"] is True
+    position_id = body["position"]["positionId"]
+    expected = {"positionId": position_id, "positionTitle": long_title}
+    assert body["position"] == expected
+    assert get_position(api_client, position_id) == expected
 
 
 def test_post_position_invalid_json(admin_request):
     response = admin_request("POST", headers={"Content-Type": "application/json"}, content='{"')
-    expect_status(response, 400)
+    assert_validation(response)
 
 
 def test_post_position_unsupported_media_type(admin_request, title):

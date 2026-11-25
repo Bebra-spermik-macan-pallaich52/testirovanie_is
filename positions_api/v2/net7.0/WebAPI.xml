@@ -1,0 +1,377 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebAPI</name>
+    </assembly>
+    <members>
+        <member name="T:WebAPI.Controllers.DepartmentsController">
+            <summary>
+            Отделы
+            </summary>
+        </member>
+        <member name="M:WebAPI.Controllers.DepartmentsController.GetAll">
+            <summary>
+            Вывод списка отделов (с руководителями)
+            </summary>
+        </member>
+        <member name="M:WebAPI.Controllers.DepartmentsController.GetById(System.Int32)">
+            <summary>
+            Поиск отдела по идентификатору (с руководителем)
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.DepartmentsController.SearchByName(System.String)">
+            <summary>
+            Поиск отделов по названию (поиск по подстроке)
+            </summary>
+            <param name="query">Часть названия отдела</param>
+            <returns>Список найденных отделов</returns>
+        </member>
+        <member name="M:WebAPI.Controllers.DepartmentsController.GetDepartmentsCount">
+            <summary>
+            Получить общее количество отделов
+            </summary>
+        </member>
+        <member name="M:WebAPI.Controllers.DepartmentsController.GetTotalEmployeesCount">
+            <summary>
+            Получить общее количество сотрудников во всех отделах
+            </summary>
+        </member>
+        <member name="M:WebAPI.Controllers.DepartmentsController.GetEmployeesCountByDepartment(System.Int32)">
+            <summary>
+            Получить количество сотрудников в конкретном отделе
+            </summary>
+            <param name="id">Идентификатор отдела</param>
+        </member>
+        <member name="M:WebAPI.Controllers.DepartmentsController.Create(WebAPI.DTOs.CreateUpdateDepartmentDto)">
+            <summary>
+            Добавление отдела
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.DepartmentsController.Update(System.Int32,WebAPI.DTOs.CreateUpdateDepartmentDto)">
+            <summary>
+            Редактирование отдела
+            </summary>
+            <param name="id"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.DepartmentsController.Delete(System.Int32)">
+            <summary>
+            Удаление отдела
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.EmployeesController.GetAll">
+            <summary>
+            Вывод сотрудников
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.EmployeesController.GetById(System.Int32)">
+            <summary>
+            Поиск сотрудника по идентификатору
+            </summary>
+            <param name="id">Идентификатор сотрудника</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.EmployeesController.GetByDepartment(System.Int32)">
+            <summary>
+            Просмотр списка сотрудников заданного отдела
+            </summary>
+            <param name="departmentId">Идентификатор отдела</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.EmployeesController.Create(WebAPI.DTOs.CreateUpdateEmployeeDto)">
+            <summary>
+            Добавление сотрудника
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.EmployeesController.Update(System.Int32,WebAPI.DTOs.CreateUpdateEmployeeDto)">
+            <summary>
+            Редактирование информации о сотруднике
+            </summary>
+            <param name="id"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.EmployeesController.Delete(System.Int32)">
+            <summary>
+            Удаление сотрудника
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.EventsController.Get">
+            <summary>
+            Вывод списка мероприятий
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.EventsController.GetById(System.Int32)">
+            <summary>
+            Поиск мероприятия по идентификатору
+            </summary>
+            <param name="id">Идентификатор мероприятия</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.EventsController.GetByTags(System.Collections.Generic.List{System.Int32})">
+            <summary>
+            Поиск событий по хэш-тегам 
+            </summary>
+            <param name="tagIds">Список идентификаторов тегов.</param>
+            <returns>События, соответствующие фильтру</returns>
+        </member>
+        <member name="M:WebAPI.Controllers.EventsController.Create(WebAPI.DTOs.CreateEventRequestDto)">
+            <summary>
+            Добавление мероприятия
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.EventsController.Update(System.Int32,WebAPI.DTOs.CreateEventRequestDto)">
+            <summary>
+            Редактирование мероприятия
+            </summary>
+            <param name="id">Идентификатор мероприятия</param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.EventsController.Delete(System.Int32)">
+            <summary>
+            Удаление мероприятия
+            </summary>
+            <param name="id">Идентификатор мероприятия</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.EventsController.DeleteBulk(System.Collections.Generic.List{System.Int32})">
+            <summary>
+            Массовое удаление мероприятий по списку идентификаторов
+            </summary>
+            <param name="eventIds">Список идентификаторов мероприятий для удаления</param>
+            <returns>Результат удаления</returns>
+        </member>
+        <member name="M:WebAPI.Controllers.PositionsController.GetAll">
+            <summary>
+            Вывод должностей сотрудников
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.PositionsController.GetById(System.Int32)">
+            <summary>
+            Поиск должности с заданным идентификатором
+            </summary>
+            <param name="positionId">Идентификатор должности</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.PositionsController.Create(WebAPI.DTOs.CreateUpdatePositionDto)">
+            <summary>
+            Добавление должности
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.PositionsController.Update(System.Int32,WebAPI.DTOs.CreateUpdatePositionDto)">
+            <summary>
+            Изменение должности
+            </summary>
+            <param name="positionId">Идентификатор должности</param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.PositionsController.Delete(System.Int32)">
+            <summary>
+            Удаление должности
+            </summary>
+            <param name="positionId">Идентификатор должности</param>
+            <returns></returns>
+        </member>
+        <member name="M:WebAPI.Controllers.RegistrationsController.GetAll">
+            <summary>
+            Получение всех регистраций (только админ)
+            </summary>
+        </member>
+        <member name="M:WebAPI.Controllers.RegistrationsController.GetById(System.Int32)">
+            <summary>
+            Получение регистрации по ID (своя или админ)
+            </summary>
+        </member>
+        <member name="M:WebAPI.Controllers.RegistrationsController.GetByEmployee(System.Int32)">
+            <summary>
+            Получение регистраций по сотруднику (свои или админ)
+            </summary>
+        </member>
+        <member name="M:WebAPI.Controllers.RegistrationsController.GetByEvent(System.Int32)">
+            <summary>
+            Получение регистраций на мероприятие
+            </summary>
+        </member>
+        <member name="M:WebAPI.Controllers.RegistrationsController.Create(WebAPI.DTOs.CreateUpdateRegistrationDto)">
+            <summary>
+            Создание новой регистрации (на себя или админ)
+            </summary>
+        </member>
+        <member name="M:WebAPI.Controllers.RegistrationsController.Update(System.Int32,WebAPI.DTOs.CreateUpdateRegistrationDto)">
+            <summary>
+            Обновление статуса регистрации
+            </summary>
+        </member>
+        <member name="M:WebAPI.Controllers.RegistrationsController.Delete(System.Int32)">
+            <summary>
+            Отмена регистрации
+            </summary>
+        </member>
+        <member name="M:WebAPI.Controllers.TagsController.Get">
+            <summary>
+            Просмотр всех хэш-тегов
+            </summary>
+        </member>
+        <member name="M:WebAPI.Controllers.TagsController.GetById(System.Int32)">
+            <summary>
+            Поиск хэш-тега по идентификатору
+            </summary>
+            <param name="id">Идентификатор хэш-тега</param>
+        </member>
+        <member name="M:WebAPI.Controllers.TagsController.Update(System.Int32,WebAPI.DTOs.CreateUpdateTagDto)">
+            <summary>
+            Редактирование хэш-тега
+            </summary>
+            <param name="id">Идентификатор хэш-тега</param>
+            <param name="request"></param>
+        </member>
+        <member name="M:WebAPI.Controllers.TagsController.Delete(System.Int32)">
+            <summary>
+            Удаление хэш-тега
+            </summary>
+            <param name="id">Идентификатор хэш-тега</param>
+        </member>
+        <member name="M:WebAPI.Controllers.TagsController.Create(WebAPI.DTOs.CreateUpdateTagDto)">
+            <summary>
+            Добавление хэш-тега
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="P:WebAPI.DTOs.CreateUpdateDepartmentDto.DepartmentName">
+            <summary>
+            Название отдела
+            </summary>
+            <example>Отдел разработки</example>
+        </member>
+        <member name="T:WebAPI.DTOs.CreateUpdateRegistrationDto">
+            <summary>
+            DTO для создания/обновления регистрации
+            </summary>
+        </member>
+        <member name="P:WebAPI.DTOs.CreateUpdateRegistrationDto.EmployeeId">
+            <summary>
+            ID сотрудника
+            </summary>
+        </member>
+        <member name="P:WebAPI.DTOs.CreateUpdateRegistrationDto.EventId">
+            <summary>
+            ID мероприятия
+            </summary>
+        </member>
+        <member name="P:WebAPI.DTOs.CreateUpdateRegistrationDto.Status">
+            <summary>
+            Статус регистрации
+            </summary>
+        </member>
+        <member name="P:WebAPI.DTOs.CreateUpdateRegistrationDto.Comment">
+            <summary>
+            Комментарий
+            </summary>
+        </member>
+        <member name="T:WebAPI.DTOs.RegistrationResponseDto">
+            <summary>
+            DTO для ответа с информацией о регистрации
+            </summary>
+        </member>
+        <member name="T:WebAPI.Models.Registration">
+            <summary>
+            Модель регистрации сотрудника на мероприятие
+            </summary>
+        </member>
+        <member name="P:WebAPI.Models.Registration.Id">
+            <summary>
+            Уникальный идентификатор регистрации
+            </summary>
+        </member>
+        <member name="P:WebAPI.Models.Registration.EmployeeId">
+            <summary>
+            ID сотрудника
+            </summary>
+        </member>
+        <member name="P:WebAPI.Models.Registration.Employee">
+            <summary>
+            Сотрудник (навигационное свойство)
+            </summary>
+        </member>
+        <member name="P:WebAPI.Models.Registration.EventId">
+            <summary>
+            ID мероприятия
+            </summary>
+        </member>
+        <member name="P:WebAPI.Models.Registration.Event">
+            <summary>
+            Мероприятие (навигационное свойство)
+            </summary>
+        </member>
+        <member name="P:WebAPI.Models.Registration.RegistrationDate">
+            <summary>
+            Дата и время регистрации
+            </summary>
+        </member>
+        <member name="P:WebAPI.Models.Registration.Status">
+            <summary>
+            Статус регистрации (Зарегистрирован, Отменен, Посещен)
+            </summary>
+        </member>
+        <member name="P:WebAPI.Models.Registration.Comment">
+            <summary>
+            Комментарий к регистрации (опционально)
+            </summary>
+        </member>
+        <member name="M:WebAPI.Models.Registration.#ctor">
+            <summary>
+            Конструктор по умолчанию
+            </summary>
+        </member>
+        <member name="M:WebAPI.Models.Registration.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Конструктор с параметрами
+            </summary>
+        </member>
+        <member name="T:WebAPI.Models.RegistrationStatus">
+            <summary>
+            Статусы регистрации
+            </summary>
+        </member>
+        <member name="F:WebAPI.Models.RegistrationStatus.Registered">
+            <summary>
+            Зарегистрирован
+            </summary>
+        </member>
+        <member name="F:WebAPI.Models.RegistrationStatus.Cancelled">
+            <summary>
+            Отменен
+            </summary>
+        </member>
+        <member name="F:WebAPI.Models.RegistrationStatus.Attended">
+            <summary>
+            Посещен
+            </summary>
+        </member>
+        <member name="F:WebAPI.Models.RegistrationStatus.NotAttended">
+            <summary>
+            Не посещен
+            </summary>
+        </member>
+    </members>
+</doc>

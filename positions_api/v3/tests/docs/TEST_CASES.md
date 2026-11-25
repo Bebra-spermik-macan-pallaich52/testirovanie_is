@@ -1,0 +1,43 @@
+# Тест-кейсы /Departments
+
+| ID | Название | Шаги | Ожидаемый результат | Фикстуры | Автотест |
+|---|---|---|---|---|---|
+| DEP-01 | Получение списка отделов | 1. Отправить `GET /Departments` | 200 OK; тело — список; в первом элементе есть `id` и `departmentName` | `api_client` | `test_get_departments_list` |
+| DEP-02 | Получение отдела по существующему ID | 1. Взять существующий ID отдела. 2. Отправить `GET /Departments/{id}` | 200 OK; в теле `id` совпадает с запрошенным | `api_client`, `generate_id_department` | `test_get_department_by_id` |
+| DEP-03 | Получение отдела по несуществующему ID | 1. Взять несуществующий ID. 2. Отправить `GET /Departments/{id}` | 404 Not Found; `success:false`; `message == "Отдел не найден"` | `api_client`, `generate_uncorrect_id_department` | `test_get_department_by_uncorrect_id` |
+| DEP-04 | Поиск отдела по существующему названию | 1. Взять реальное название отдела. 2. Отправить `GET /Departments/search?query={name}` | 200 OK; `departmentName` первого результата совпадает с запрошенным | `api_client`, `find_department_name` | `test_get_department_by_real_name` |
+| DEP-05 | Поиск отдела по несуществующему названию | 1. Сгенерировать название. 2. Отправить `GET /Departments/search?query={name}` | 404 Not Found; `success:false`; в `message` есть «не найдены» | `api_client`, `generate_department_name` | `test_get_department_by_department_name` |
+| DEP-06 | Создание отдела с токеном Employee | 1. Сформировать тело (`departmentName`, `headId`). 2. Отправить `POST /Departments` с токеном Employee | 403 Forbidden | `api_client`, `real_employee_id`, `auth_header_employee` | `test_post_department_403_error` |
+| DEP-07 | Создание отдела без авторизации | 1. Сформировать тело. 2. Отправить `POST /Departments` без токена | 401 Unauthorized | `api_client`, `real_employee_id` | `test_post_department_unauthorize` |
+| DEP-08 | Создание отдела администратором + удаление | 1. Отправить `POST /Departments` с токеном Admin. 2. Проверить ответ. 3. Удалить созданный отдел `DELETE /Departments/{id}` с токеном Admin | 201 Created; `success:true`, `message == "Отдел создан"`, `id` присутствует, поля совпадают с запросом; затем 200 OK, `success:true`, в `message` «удалён» | `api_client`, `auth_header`, `department_payload` | `test_post_department_by_admin` |
+| DEP-09 | Удаление отдела без авторизации | 1. Взять существующий ID. 2. Отправить `DELETE /Departments/{id}` без токена | 401 Unauthorized | `api_client`, `generate_id_department` | `test_delete_department_unauthorized` |
+| DEP-10 | Удаление отдела с токеном Employee | 1. Создать отдел. 2. Отправить `DELETE /Departments/{id}` с токеном Employee | 403 Forbidden | `api_client`, `create_department`, `auth_header_employee` | `test_delete_department_fobidden` |
+| DEP-11 | Удаление отдела администратором | 1. Создать отдел. 2. Отправить `DELETE /Departments/{id}` с токеном Admin | 200 OK | `api_client`, `create_department`, `auth_header` | `test_delete_department_by_id` |
+
+# Тест-кейсы: /Positions
+
+| ID | Название | Шаги | Ожидаемый результат | Фикстуры | Автотест |
+|---|---|---|---|---|---|
+| POS-01 | Получение списка должностей (аноним) | 1. Отправить `GET /Positions` без токена | 200 OK; JSON-массив должностей (id + название) | Предзаполненный справочник должностей | `test_get_positions_list` |
+| POS-02 | Получение должности по ID (аноним) | 1. Отправить `GET /Positions/1` без токена | 200 OK; объект должности с `positionId=1` | Должность с id=1 | `test_get_position_by_id` |
+| POS-03 | Получение должности по несуществующему ID | 1. Отправить `GET /Positions/99999` | 404 Not Found; `success:false`, сообщение о ненайденной должности | Отсутствие должности id=99999 | `test_get_position_by_uncorrect_id` |
+| POS-04 | Создание должности (Admin) | 1. Получить токен Admin. 2. Отправить `POST /Positions` с телом `{"positionTitle":"Архитектор ПО"}` и заголовком `Authorization: Bearer <admin>` | 201 Created; `success:true`; объект `position` с новым `positionId` и `positionTitle` | Свободное название должности | `test_post_position_by_admin` |
+| POS-05 | Создание должности без токена | 1. Отправить `POST /Positions` с валидным телом без заголовка Authorization | 401 Unauthorized | Валидное тело | `test_post_position_unauthorized` |
+| POS-06 | Создание должности с токеном Employee | 1. Получить токен Employee. 2. Отправить `POST /Positions` с валидным телом и токеном Employee | 403 Forbidden; должность не создана | Токен Employee | `test_post_position_forbidden` |
+| POS-07 | Создание должности-дубликата | 1. Отправить `POST /Positions` с названием уже существующей должности (Admin) | 409 Conflict; сообщение о дубликате | Существующая должность (напр. «Руководитель отдела») | `test_post_position_duplicate` |
+| POS-08 | Создание должности с пустым названием | 1. Отправить `POST /Positions` с телом `{"positionTitle":""}` (Admin) | 422 Unprocessable Entity; `success:false`, массив `errors` | — | `test_post_position_empty_title` |
+| POS-09 | Создание должности с названием > 100 символов | 1. Отправить `POST /Positions` с `positionTitle` длиной 101+ символов (Admin) | 422 Unprocessable Entity; ошибка валидации | Строка 101 символ | `test_post_position_long_title` |
+| POS-10 | Создание должности с невалидным JSON | 1. Отправить `POST /Positions` с синтаксически неверным JSON (Admin) | 400 Bad Request | Битый JSON | `test_post_position_invalid_json` |
+| POS-11 | Создание должности с неверным Content-Type | 1. Отправить `POST /Positions` с `Content-Type: text/plain` (Admin) | 415 Unsupported Media Type | — | `test_post_position_unsupported_media_type` |
+| POS-12 | Редактирование должности (Admin) | 1. Отправить `PUT /Positions/{id}` с новым названием и токеном Admin | 200 OK; `success:true`; обновлённое название в ответе и при последующем GET | Свободная должность для переименования | `test_put_position_by_admin` |
+| POS-13 | Редактирование несуществующей должности | 1. Отправить `PUT /Positions/99999` с валидным телом (Admin) | 404 Not Found | Отсутствие должности id=99999 | `test_put_position_uncorrect_id` |
+| POS-14 | Редактирование должности с токеном Employee | 1. Отправить `PUT /Positions/1` с валидным телом и токеном Employee | 403 Forbidden; данные не изменены | Токен Employee | `test_put_position_forbidden` |
+| POS-15 | Редактирование должности без токена | 1. Отправить `PUT /Positions/1` с валидным телом без Authorization | 401 Unauthorized | — | `test_put_position_unauthorized` |
+| POS-16 | Редактирование на дубликат названия | 1. Переименовать должность A в название существующей должности B (Admin) | 409 Conflict; название не изменено | Две существующие должности | `test_put_position_duplicate` |
+| POS-17 | Редактирование с пустым названием | 1. Отправить `PUT /Positions/{id}` с `positionTitle:""` (Admin) | 422 Unprocessable Entity; ошибка валидации | Существующая должность | `test_put_position_empty_title` |
+| POS-18 | Удаление свободной должности (Admin) | 1. Отправить `DELETE /Positions/{id}` для должности, не закреплённой за сотрудниками, с токеном Admin | 200 OK; `success:true`, сообщение «Должность '…' удалена»; последующий GET → 404 | Должность без привязки к сотрудникам | `test_delete_position_by_admin` |
+| POS-19 | Удаление должности, закреплённой за сотрудником | 1. Отправить `DELETE /Positions/1` (должность используется) с токеном Admin | 409 Conflict; сообщение, что должность используется; должность остаётся | Должность id=1, привязанная к сотруднику | `test_delete_position_in_use` |
+| POS-20 | Удаление несуществующей должности | 1. Отправить `DELETE /Positions/99999` (Admin) | 404 Not Found | Отсутствие должности id=99999 | `test_delete_position_uncorrect_id` |
+| POS-21 | Удаление должности без токена | 1. Отправить `DELETE /Positions/{id}` без Authorization | 401 Unauthorized; должность не удалена | Существующая должность | `test_delete_position_unauthorized` |
+| POS-22 | Удаление должности с токеном Employee | 1. Отправить `DELETE /Positions/{id}` с токеном Employee | 403 Forbidden; должность не удалена | Токен Employee | `test_delete_position_forbidden` |
+| POS-23 | Проверка согласованности после CRUD-цикла | 1. Создать должность (POS-04). 2. Переименовать (POS-12). 3. Получить по ID. 4. Удалить (POS-18). 5. Получить по ID | На каждом шаге ответы соответствуют ожидаемым; после удаления — 404 | Чистые данные, Admin-токен | `test_positions_crud_e2e` |
